@@ -1,9 +1,9 @@
 let BreathingRibcage = function(p) {
   let t = 0;
   p.setup = function() {
-    p.createCanvas(600, 400);
-    p.stroke(50);
+    p.createCanvas(400, 300);
     p.noFill();
+    p.stroke(0);
   };
   p.draw = function() {
     p.background(255);
@@ -23,6 +23,4 @@ let BreathingRibcage = function(p) {
     t += 0.03;
   };
 };
-window.addEventListener("load", () => {
-  new p5(BreathingRibcage, "canvas1");
-});
+window.onload = () => new p5(BreathingRibcage, 'canvas1');
