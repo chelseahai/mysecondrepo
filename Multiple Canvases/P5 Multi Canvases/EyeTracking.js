@@ -18,4 +18,4 @@ let EyeTracking = function(p) {
     p.ellipse(eyeX + pupilX, eyeY + pupilY, 10, 10);
   };
 };
-window.onload = () => new p5(EyeTracking, 'canvas2');
+window.addEventListener("load", () => new p5(EyeTracking, "canvas2"));

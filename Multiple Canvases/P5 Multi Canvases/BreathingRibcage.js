@@ -23,4 +23,4 @@ let BreathingRibcage = function(p) {
     t += 0.03;
   };
 };
-window.onload = () => new p5(BreathingRibcage, 'canvas1');
+window.addEventListener("load", () => new p5(BreathingRibcage, "canvas1"));
