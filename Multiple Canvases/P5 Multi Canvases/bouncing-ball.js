@@ -1,80 +1,44 @@
-
-let sketch2 = function(p) {
-  let boids = [];
+// Bouncing Ball Sketch - using p5.js instance mode
+var sketch2 = function(p) {
+  // All variables are scoped to this instance
+  var x, y; // Ball position
+  var dx, dy; // Ball velocity
+  var radius = 30; // Ball radius
 
   p.setup = function() {
-    let canvas = p.createCanvas(300, 300);
-    canvas.parent("canvas-container-2");
-    for (let i = 0; i < 80; i++) {
-      boids.push(new Boid(p.random(p.width), p.random(p.height)));
-    }
+    // Create the canvas and attach it to the container
+    var canvas = p.createCanvas(800, 400);
+    canvas.parent('canvas-container-2');
+
+    // Initialize ball position and velocity
+    x = p.width / 2;
+    y = p.height / 2;
+    dx = 4;
+    dy = 3;
   };
 
   p.draw = function() {
-    p.background("#EDF2F6");
-    for (let boid of boids) {
-      boid.flock(boids);
-      boid.update();
-      boid.show();
+    // Clear the background
+    p.background(240);
+
+    // Draw the ball
+    p.fill(100, 180, 255);
+    p.noStroke();
+    p.ellipse(x, y, radius * 2);
+
+    // Update ball position
+    x += dx;
+    y += dy;
+
+    // Bounce off the edges
+    if (x - radius < 0 || x + radius > p.width) {
+      dx *= -1;
+    }
+    if (y - radius < 0 || y + radius > p.height) {
+      dy *= -1;
     }
   };
-
-  class Boid {
-    constructor(x, y) {
-      this.position = p.createVector(x, y);
-      this.velocity = p5.Vector.random2D();
-      this.velocity.setMag(p.random(2, 4));
-      this.acceleration = p.createVector();
-      this.maxForce = 0.05;
-      this.maxSpeed = 3;
-      this.color = p.random(["#B3CCE0", "#D9E2EC", "#C3D7EB", "#E5D4EF", "#E8E1F0"]);
-    }
-
-    edges() {
-      if (this.position.x > p.width) this.position.x = 0;
-      if (this.position.x < 0) this.position.x = p.width;
-      if (this.position.y > p.height) this.position.y = 0;
-      if (this.position.y < 0) this.position.y = p.height;
-    }
-
-    align(boids) {
-      let perceptionRadius = 50;
-      let steering = p.createVector();
-      let total = 0;
-      for (let other of boids) {
-        let d = p.dist(this.position.x, this.position.y, other.position.x, other.position.y);
-        if (other !== this && d < perceptionRadius) {
-          steering.add(other.velocity);
-          total++;
-        }
-      }
-      if (total > 0) {
-        steering.div(total);
-        steering.setMag(this.maxSpeed);
-        steering.sub(this.velocity);
-        steering.limit(this.maxForce);
-      }
-      return steering;
-    }
-
-    update() {
-      this.position.add(this.velocity);
-      this.velocity.add(this.acceleration);
-      this.velocity.limit(this.maxSpeed);
-      this.acceleration.mult(0);
-      this.edges();
-    }
-
-    flock(boids) {
-      let alignment = this.align(boids);
-      this.acceleration.add(alignment);
-    }
-
-    show() {
-      p.fill(this.color);
-      p.noStroke();
-      p.ellipse(this.position.x, this.position.y, 6);
-    }
-  }
 };
-new p5(sketch2);
+
+// Create the instance
+var myp5_2 = new p5(sketch2, 'canvas-container-2'); 

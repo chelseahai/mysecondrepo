@@ -1,54 +1,50 @@
-
-let sketch1 = function(p) {
-  let x = 0.0;
-  let y = 0.0;
-  let angle = 0.0;
-  let radius = 80.0;
-  let eyeColor;
+// 2D Drawing Sketch - using p5.js instance mode
+var sketch1 = function(p) {
+  // All variables are scoped to this instance
+  var canvasWidth = 800;
+  var canvasHeight = 400;
+  var gridSpacing = 40;
+  var canvas;
 
   p.setup = function() {
-    let canvas = p.createCanvas(300, 300);
-    canvas.parent("canvas-container-1");
-    p.noStroke();
-    eyeColor = p.color("#C0D6E4"); // light blue-gray (light summer)
+    canvas = p.createCanvas(canvasWidth, canvasHeight);
+    canvas.parent('canvas-container-1');
   };
 
   p.draw = function() {
-    p.background("#F2F2F7"); // soft lavender
-
-    let centerX = p.width / 2;
-    let centerY = p.height / 2;
-    angle += 0.05;
-    x = centerX + p.cos(angle) * radius;
-    y = centerY + p.sin(angle) * radius;
-
-    // face base
-    p.fill("#E1D7EC"); // soft pink-lavender
-    p.ellipse(centerX, centerY, 180, 180);
-
-    // left eye
-    p.fill(eyeColor);
-    p.ellipse(centerX - 40, centerY - 20, 40, 30);
-    p.fill("#6E7CA0");
-    p.ellipse(centerX - 40, centerY - 20, 10, 10);
-
-    // right eye
-    p.fill(eyeColor);
-    p.ellipse(centerX + 40, centerY - 20, 40, 30);
-    p.fill("#6E7CA0");
-    p.ellipse(centerX + 40, centerY - 20, 10, 10);
-
-    // mascara lines
-    p.stroke("#A3B1C6");
-    for (let i = -15; i < 15; i += 5) {
-      p.line(centerX - 40 + i, centerY - 35, centerX - 40 + i, centerY - 45);
-      p.line(centerX + 40 + i, centerY - 35, centerX + 40 + i, centerY - 45);
-    }
-
-    // pink animated circle
-    p.noStroke();
-    p.fill("#EAC4D5"); // cool light pink
-    p.ellipse(x, y, 20, 20);
+    p.background(250);
+    drawGrid();
+    drawPrimitives();
   };
+
+  function drawGrid() {
+    p.stroke(200);
+    p.strokeWeight(1);
+    for (var x = 0; x <= p.width; x += gridSpacing) {
+      p.line(x, 0, x, p.height);
+    }
+    for (var y = 0; y <= p.height; y += gridSpacing) {
+      p.line(0, y, p.width, y);
+    }
+  }
+
+  function drawPrimitives() {
+    // Rectangle
+    p.fill(255, 100, 100);
+    p.rect(120, 80, 100, 60);
+    // Ellipse
+    p.fill(100, 180, 255);
+    p.ellipse(350, 200, 90, 90);
+    // Line
+    p.stroke(80, 200, 120);
+    p.strokeWeight(4);
+    p.line(500, 100, 700, 300);
+    // Triangle
+    p.noStroke();
+    p.fill(255, 220, 80);
+    p.triangle(600, 80, 750, 60, 700, 200);
+  }
 };
-new p5(sketch1);
+
+// Create the instance
+var myp5_1 = new p5(sketch1, 'canvas-container-1'); 

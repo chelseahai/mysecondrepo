@@ -1,64 +1,100 @@
+// spatial-canvas-sketch.js
+// Interactive p5.js sketch: grid, primitives, zoom, and pan
 
-let sketch3 = function(p) {
-  let cols, rows;
-  let resolution = 10;
-  let grid;
+// Zoom Pan Sketch - using p5.js instance mode
+var sketch3 = function(p) {
+  // All variables are scoped to this instance
+  var canvasWidth = 800;
+  var canvasHeight = 400;
+  var gridSpacing = 40;
+  var zoom = 1;
+  var offsetX = 0;
+  var offsetY = 0;
+  var isDragging = false;
+  var lastMouseX, lastMouseY;
+  var canvas;
 
   p.setup = function() {
-    let canvas = p.createCanvas(300, 300);
-    canvas.parent("canvas-container-3");
-    cols = p.width / resolution;
-    rows = p.height / resolution;
-    grid = make2DArray(cols, rows);
-    for (let i = 0; i < cols; i++) {
-      for (let j = 0; j < rows; j++) {
-        grid[i][j] = p.floor(p.random(2));
-      }
-    }
+    canvas = p.createCanvas(canvasWidth, canvasHeight);
+    canvas.parent('canvas-container-3');
   };
 
   p.draw = function() {
-    p.background("#F1F0F7");
-    for (let i = 0; i < cols; i++) {
-      for (let j = 0; j < rows; j++) {
-        let x = i * resolution;
-        let y = j * resolution;
-        if (grid[i][j] == 1) {
-          p.fill(p.random(["#D8C4DF", "#EAC4D5", "#C8D3E1", "#F1C7E7"]));
-          p.stroke("#ECECEC");
-          p.rect(x, y, resolution - 1, resolution - 1);
-        }
-      }
-    }
+    p.background(250);
+    // Apply pan and zoom
+    p.translate(p.width / 2 + offsetX, p.height / 2 + offsetY);
+    p.scale(zoom);
+    p.translate(-p.width / 2, -p.height / 2);
 
-    let next = make2DArray(cols, rows);
-
-    for (let i = 0; i < cols; i++) {
-      for (let j = 0; j < rows; j++) {
-        let state = grid[i][j];
-        let sum = 0;
-        for (let xoff = -1; xoff < 2; xoff++) {
-          for (let yoff = -1; yoff < 2; yoff++) {
-            let col = (i + xoff + cols) % cols;
-            let row = (j + yoff + rows) % rows;
-            sum += grid[col][row];
-          }
-        }
-        sum -= state;
-        if (state == 1 && (sum < 2 || sum > 3)) next[i][j] = 0;
-        else if (state == 0 && sum == 3) next[i][j] = 1;
-        else next[i][j] = state;
-      }
-    }
-    grid = next;
+    drawGrid();
+    drawPrimitives();
   };
 
-  function make2DArray(cols, rows) {
-    let arr = new Array(cols);
-    for (let i = 0; i < arr.length; i++) {
-      arr[i] = new Array(rows);
+  function drawGrid() {
+    p.stroke(200);
+    p.strokeWeight(1);
+    for (var x = 0; x <= p.width; x += gridSpacing) {
+      p.line(x, 0, x, p.height);
     }
-    return arr;
+    for (var y = 0; y <= p.height; y += gridSpacing) {
+      p.line(0, y, p.width, y);
+    }
   }
+
+  function drawPrimitives() {
+    // Rectangle
+    p.fill(255, 100, 100);
+    p.rect(120, 80, 100, 60);
+    // Ellipse
+    p.fill(100, 180, 255);
+    p.ellipse(350, 200, 90, 90);
+    // Line
+    p.stroke(80, 200, 120);
+    p.strokeWeight(4);
+    p.line(500, 100, 700, 300);
+    // Triangle
+    p.noStroke();
+    p.fill(255, 220, 80);
+    p.triangle(600, 80, 750, 60, 700, 200);
+  }
+
+  p.mouseWheel = function(event) {
+    // Only zoom if mouse is over this canvas
+    if (canvas && canvas.elt.matches(':hover')) {
+      var zoomFactor = 1.05;
+      if (event.delta > 0) {
+        zoom /= zoomFactor;
+      } else {
+        zoom *= zoomFactor;
+      }
+      zoom = p.constrain(zoom, 0.2, 5);
+      return false;
+    }
+  };
+
+  p.mousePressed = function() {
+    // Only start panning if mouse is over this canvas
+    if (canvas && canvas.elt.matches(':hover') && p.mouseButton === p.LEFT && p.mouseX >= 0 && p.mouseX <= p.width && p.mouseY >= 0 && p.mouseY <= p.height) {
+      isDragging = true;
+      lastMouseX = p.mouseX;
+      lastMouseY = p.mouseY;
+    }
+  };
+
+  p.mouseDragged = function() {
+    // Pan with left mouse button
+    if (isDragging && canvas && canvas.elt.matches(':hover')) {
+      offsetX += p.mouseX - lastMouseX;
+      offsetY += p.mouseY - lastMouseY;
+      lastMouseX = p.mouseX;
+      lastMouseY = p.mouseY;
+    }
+  };
+
+  p.mouseReleased = function() {
+    isDragging = false;
+  };
 };
-new p5(sketch3);
+
+// Create the instance
+var myp5_3 = new p5(sketch3, 'canvas-container-3'); 
