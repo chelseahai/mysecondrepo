@@ -17,7 +17,7 @@ In order to add your p5.js sketch to your website, you need to load the p5.js li
 <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
 ```
 
-Add your latest sketch to a new javascript file 'yourSketch.js' (name it appropriately) and link it to you html file. Small Change.
+Add your latest sketch to a new javascript file 'yourSketch.js' (name it appropriately) and link it to you html file. Small Change.2
 
 **In the `<body>` section (before closing `</body>` tag):**
 ```html
