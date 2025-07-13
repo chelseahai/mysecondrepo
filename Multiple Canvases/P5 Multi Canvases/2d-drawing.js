@@ -1,36 +1,54 @@
 
 let sketch1 = function(p) {
-  let hearts = [];
+  let x = 0.0;
+  let y = 0.0;
+  let angle = 0.0;
+  let radius = 80.0;
+  let eyeColor;
 
   p.setup = function() {
-    let canvas = p.createCanvas(300, 400);
-    canvas.parent("canvas1");
-    for (let i = 0; i < 20; i++) {
-      hearts.push({
-        x: p.random(100, 200),
-        y: p.random(80, 320),
-        size: p.random(10, 30),
-        speed: p.random(0.5, 1.5)
-      });
-    }
+    let canvas = p.createCanvas(300, 300);
+    canvas.parent("canvas-container-1");
+    p.noStroke();
+    eyeColor = p.color("#C0D6E4"); // light blue-gray (light summer)
   };
 
   p.draw = function() {
-    p.background('#ffeef7');
-    p.noFill();
-    p.stroke('#ff69b4');
-    p.strokeWeight(4);
-    p.beginShape();
-    p.vertex(150, 60);
-    p.bezierVertex(80, 100, 80, 300, 150, 360);
-    p.bezierVertex(220, 300, 220, 100, 150, 60);
-    p.endShape();
+    p.background("#F2F2F7"); // soft lavender
 
-    for (let h of hearts) {
-      p.fill('#ff99cc');
-      p.noStroke();
-      p.ellipse(h.x, h.y, h.size + 5 * p.sin(p.frameCount * 0.1));
+    let centerX = p.width / 2;
+    let centerY = p.height / 2;
+    angle += 0.05;
+    x = centerX + p.cos(angle) * radius;
+    y = centerY + p.sin(angle) * radius;
+
+    // face base
+    p.fill("#E1D7EC"); // soft pink-lavender
+    p.ellipse(centerX, centerY, 180, 180);
+
+    // left eye
+    p.fill(eyeColor);
+    p.ellipse(centerX - 40, centerY - 20, 40, 30);
+    p.fill("#6E7CA0");
+    p.ellipse(centerX - 40, centerY - 20, 10, 10);
+
+    // right eye
+    p.fill(eyeColor);
+    p.ellipse(centerX + 40, centerY - 20, 40, 30);
+    p.fill("#6E7CA0");
+    p.ellipse(centerX + 40, centerY - 20, 10, 10);
+
+    // mascara lines
+    p.stroke("#A3B1C6");
+    for (let i = -15; i < 15; i += 5) {
+      p.line(centerX - 40 + i, centerY - 35, centerX - 40 + i, centerY - 45);
+      p.line(centerX + 40 + i, centerY - 35, centerX + 40 + i, centerY - 45);
     }
+
+    // pink animated circle
+    p.noStroke();
+    p.fill("#EAC4D5"); // cool light pink
+    p.ellipse(x, y, 20, 20);
   };
 };
 new p5(sketch1);
